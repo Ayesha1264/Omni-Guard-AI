@@ -1,0 +1,202 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: all 0.5s ease;
+  overflow-x: hidden;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.dark .glass {
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(148, 163, 184, 0.25);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.55) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.dark .glass-card {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.55) 100%);
+  border-color: rgba(148, 163, 184, 0.18);
+}
+
+.light .glass-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%);
+  border-color: rgba(148, 163, 184, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.stylish-line {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #0ea5e9 20%, #6366f1 50%, #06b6d4 80%, transparent 100%);
+}
+
+.hero-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .hero-bg {
+  background: linear-gradient(to bottom, #000000, #020617, #000000);
+}
+
+.light .hero-bg {
+  background: linear-gradient(to bottom, #f8fafc, #ffffff, #f8fafc);
+}
+
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 15% 25%, rgba(14, 165, 233, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 45% 85%, rgba(6, 182, 212, 0.2) 0%, transparent 55%),
+    radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.18) 0%, transparent 50%);
+  animation: float 25s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(3%, 2%) rotate(2deg); }
+  50% { transform: translate(-2%, 4%) rotate(-2deg); }
+  75% { transform: translate(2%, -3%) rotate(1deg); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+
+.news-image {
+  transition: transform 0.5s ease;
+}
+
+.news-image:hover {
+  transform: scale(1.08);
+}
+
+.news-card {
+  transition: all 0.3s ease;
+}
+
+.news-card:hover .news-image {
+  transform: scale(1.08);
+}
+
+.dark {
+  color-scheme: dark;
+  background-color: #0f172a;
+  color: #f1f5f9;
+}
+
+.light {
+  color-scheme: light;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.dark ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0ea5e9, #6366f1);
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0ea5e9, #6366f1);
+  border-radius: 4px;
+}
+
+.read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.read-more:hover {
+  gap: 0.75rem;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.news-category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.4); }
+}
+
+.glow-card {
+  animation: glow 4s ease-in-out infinite;
+}

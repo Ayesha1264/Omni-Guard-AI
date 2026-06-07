@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omni Guard AI - Cyberbullying Detection</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0ea5e9;
+      --secondary: #6366f1;
+      --accent: #06b6d4;
+      --dark: #020617;
+      --darker: #000000;
+      --card: #0f172a;
+      --card-light: #1e293b;
+      --light-bg: #f8fafc;
+      --light-card: #ffffff;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(14, 165, 233, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 45% 85%, rgba(6, 182, 212, 0.2) 0%, transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.18) 0%, transparent 50%),
+        linear-gradient(135deg, var(--dark) 0%, #0f172a 50%, var(--dark) 100%);
+      color: #f1f5f9;
+      overflow-x: hidden;
+      transition: all 0.5s ease;
+    }
+
+    body.light-mode {
+      background: 
+        radial-gradient(circle at 15% 25%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 45% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%);
+      color: #1e293b;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glass {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    body.light-mode .glass {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(148, 163, 184, 0.25);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .glass-card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.55) 100%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+
+    body.light-mode .glass-card {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.85) 100%);
+      border-color: rgba(148, 163, 184, 0.25);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .stylish-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--primary) 20%, var(--secondary) 50%, var(--accent) 80%, transparent 100%);
+    }
+
+    .animate-pulse-slow {
+      animation: pulse-slow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.85; }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
+    }
+
+    .btn-secondary {
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #f1f5f9;
+    }
+
+    body.light-mode .btn-secondary {
+      color: #1e293b;
+      border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(14, 165, 233, 0.5);
+      background: rgba(14, 165, 233, 0.1);
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    nav.scrolled {
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.025em;
+    }
+
+    .logo-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    body.light-mode .nav-links a {
+      color: #475569;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -0.25rem;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      padding: 0.5rem;
+      border-radius: 9999px;
+      background: var(--card);
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #fbbf24;
+    }
+
+    body.light-mode .theme-toggle {
+      background: #f1f5f9;
+      color: #4f46e5;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+    }
+
+    section {
+      padding: 6rem 1.5rem;
+    }
+
+    .section-content {
+      max-width: 80rem;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+      border: 1px solid rgba(14, 165, 233, 0.3);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-tag i {
+      color: var(--primary);
+    }
+
+    .section-tag span {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .section-title {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    body.light-mode .section-title {
+      color: #0f172a;
+    }
+
+    .section-description {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    body.light-mode .section-description {
+      color: #64748b;
+    }
+
+    .hero {
+      padding-top: 8rem;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 3.75rem;
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+
+    body.light-mode .hero-text h1 {
+      color: #0f172a;
+    }
+
+    .hero-text p {
+      font-size: 1.125rem;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      max-width: 32rem;
+      line-height: 1.7;
+    }
+
+    body.light-mode .hero-text p {
+      color: #64748b;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-visual {
+      position: relative;
+    }
+
+    .hero-card {
+      border-radius: 1.5rem;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body.light-mode .hero-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+      pointer-events: none;
+    }
+
+    .hero-card-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-center-icon {
+      width: 5rem;
+      height: 5rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 10px 30px rgba(14, 165, 233, 0.3);
+      animation: heroIconFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes heroIconFloat {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    .hero-center-icon i {
+      font-size: 2.5rem;
+      color: white;
+    }
+
+    .futuristic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .futuristic-card {
+      border-radius: 1rem;
+      padding: 0.75rem;
+      text-align: center;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: linear-gradient(145deg, var(--card) 0%, rgba(30, 41, 59, 0.5) 100%);
+      transition: all 0.3s ease;
+    }
+
+    body.light-mode .futuristic-card {
+      background: linear-gradient(145deg, #f8fafc 0%, #ffffff 100%);
+      border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .futuristic-card:hover {
+      transform: scale(1.05);
+    }
+
+    .futuristic-card:nth-child(1):hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+
+    .futuristic-card:nth-child(2):hover {
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    .futuristic-card:nth-child(3):hover {
+      transform: scale(1.05) rotate(2deg);
+    }
+
+    .futuristic-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      margin: 0 auto 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .futuristic-icon.blue {
+      background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    }
+
+    .futuristic-icon.purple {
+      background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    }
+
+    .futuristic-icon.green {
+      background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    }
+
+    .futuristic-icon i {
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .futuristic-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    body.light-mode .futuristic-text {
+      color: #475569;
+    }
+
+    .hero-status-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .hero-status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.875rem;
+      border: 1px solid;
+      transition: all 0.3s ease;
+    }
+
+    .hero-status-item:hover {
+      transform: translateX(0.5rem) scale(1.02);
+    }
+
+    .hero-status-item.primary {
+      border-color: rgba(14, 165, 233, 0.3);
+      background: rgba(14, 165, 233, 0.1);
+    }
+
+    .hero-status-item.cyan {
+      border-color: rgba(6, 182, 212, 0.3);
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .hero-status-icon {
+      animation: spinSlow 6s linear infinite;
+    }
+
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-status-icon.primary {
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    .hero-status-icon.cyan {
+      color: #06b6d4;
+      font-size: 1.5rem;
+    }
+
+    .hero-status-text {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    body.light-mode .hero-status-text {
+      color: #1e293b;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .feature-card {
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-0.625rem) scale(1.02);
+    }
+
+    .feature-icon {
+      width: 4rem;
+      height: 4rem;
+      border-radius: 1rem;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-icon i {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    body.light-mode .feature-card h3 {
+      color: #0f172a;
+    }
+
+    .feature-card p {
+      color: #94a3b8;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    body.light-mode .feature-card p {
+      color: #64748b;
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      color: #cbd5e1;
+    }
+
+    body.light-mode .feature-list li {
+      color: #475569;
+    }
+
+    .feature-list li::before {
+      content: '';
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      flex-shrink: 0;
+    }
+
+    .impact-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .impact-stat {
+      border-radius: 1.5rem;
+      padding: 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    body.light-mode .impact-stat {
+      border-color: rgba(148, 163, 184, 0.5);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .impact-stat::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0.25rem;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+    }
+
+    .impact-stat i {
+      font-size: 3rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    .impact-number {
+      font-size: 3.75rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+    }
+
+    .impact-label {
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #94a3b8;
+    }
+
+    body.light-mode .impact-label {
+      color: #64748b;
+    }
+
+    .mission-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .mission-content h2 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    body.light-mode .mission-content h2 {
+      color: #0f172a;
+    }
+
+    .mission-content > p {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      margin-bottom: 2.5rem;
+      line-height: 1.7;
+    }
+
+    body.light-mode .mission-content > p {
+      color: #64748b;
+    }
+
+    .mission-points {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .mission-point {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.125rem;
+    }
+
+    .mission-point i {
+      color: #22c55e;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    .mission-point span {
+      color: #e2e8f0;
+    }
+
+    body.light-mode .mission-point span {
+      color: #1e293b;
+    }
+
+    .mission-visual {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      text-align: center;
+    }
+
+    .mission-visual i {
+      font-size: 5rem;
+      color: white;
+      margin-bottom: 2rem;
+    }
+
+    .mission-visual h3 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 0.75rem;
+    }
+
+    .mission-visual p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .news-card {
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    body.light-mode .news-card {
+      border-color: rgba(148, 163, 184, 0.5);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    }
+
+    .news-card:hover {
+      transform: translateY(-0.5rem);
+    }
+
+    .news-image-wrapper {
+      position: relative;
+    }
+
+    .news-image {
+      width: 100%;
+      height: 12rem;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .news-card:hover .news-image {
+      transform: scale(1.08);
+    }
+
+    .news-category {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.025em;
+    }
+
+    .news-content {
+      padding: 1.5rem;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+
+    .news-content h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    body.light-mode .news-content h3 {
+      color: #0f172a;
+    }
+
+    .btn-outline {
+      padding: 1rem 2rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1.125rem;
+      border: 2px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-outline:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .center-button {
+      text-align: center;
+    }
+
+    footer {
+      border-top: 1px solid rgba(30, 41, 59, 0.5);
+      padding: 5rem 1.5rem 2rem;
+    }
+
+    body.light-mode footer {
+      border-top-color: rgba(226, 232, 240, 1);
+    }
+
+    .footer-content {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand {
+      max-width: 24rem;
+    }
+
+    .footer-brand .logo {
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-brand p {
+      color: #64748b;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.75rem;
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      color: #94a3b8;
+    }
+
+    body.light-mode .footer-social a {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .footer-social a:hover {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+      color: white;
+    }
+
+    .footer-column h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    body.light-mode .footer-column h4 {
+      color: #0f172a;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-links a {
+      color: #64748b;
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-size: 0.9375rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-content,
+      .mission-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .features-grid,
+      .news-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .impact-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .features-grid,
+      .news-grid,
+      .impact-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="glass" id="navbar">
+    <div class="nav-content">
+      <a href="#" class="logo">
+        <div class="logo-icon animate-pulse-slow">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <span>Omni <span class="gradient-text">Guard AI</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#home"><i class="fas fa-home"></i> Home</a>
+        <a href="#features"><i class="fas fa-star"></i> Features</a>
+        <a href="#impact"><i class="fas fa-chart-line"></i> Impact</a>
+        <a href="#mission"><i class="fas fa-heart"></i> Mission</a>
+        <a href="#news"><i class="fas fa-newspaper"></i> News</a>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-sun"></i>
+        </button>
+        <button class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 1rem;">
+          Get Started
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="home">
+    <div class="section-content">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="section-tag" style="margin-bottom: 1.5rem;">
+            <i class="fas fa-sparkles"></i>
+            <span>Next-Gen AI Protection</span>
+          </div>
+          <h1>
+            Shielding Digital Spaces with
+            <br>
+            <span class="gradient-text">AI-Powered</span> Cyber Defense
+          </h1>
+          <p>
+            Omni Guard AI analyzes text, images, and videos instantly to identify and stop cyberbullying before it escalates.
+          </p>
+          <div class="hero-buttons">
+            <a href="#features" class="btn-primary">
+              Explore Features
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <button class="btn-secondary">
+              <i class="fas fa-shield-alt"></i>
+              Get Started
+            </button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="glass-card hero-card" style="animation: heroCardFloat 8s ease-in-out infinite;">
+            <style>
+              @keyframes heroCardFloat {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                50% { transform: translateY(-1rem) rotate(0.5deg); }
+              }
+            </style>
+            <div class="hero-card-content">
+              <div class="hero-center-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="futuristic-grid">
+                <div class="futuristic-card">
+                  <div class="futuristic-icon blue">
+                    <i class="fas fa-microchip"></i>
+                  </div>
+                  <span class="futuristic-text">System Active</span>
+                </div>
+                <div class="futuristic-card">
+                  <div class="futuristic-icon purple">
+                    <i class="fas fa-fingerprint"></i>
+                  </div>
+                  <span class="futuristic-text">Verified</span>
+                </div>
+                <div class="futuristic-card">
+                  <div class="futuristic-icon green">
+                    <i class="fas fa-radar"></i>
+                  </div>
+                  <span class="futuristic-text">Scanning</span>
+                </div>
+              </div>
+              <div class="hero-status-items">
+                <div class="hero-status-item primary">
+                  <i class="fas fa-shield-check hero-status-icon primary"></i>
+                  <span class="hero-status-text">Protection Engaged</span>
+                </div>
+                <div class="hero-status-item cyan">
+                  <i class="fas fa-sparkles hero-status-icon cyan"></i>
+                  <span class="hero-status-text">Real-time Scan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-6" style="margin-top: -3rem;">
+    <div class="stylish-line"></div>
+  </div>
+
+  <section id="features">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-tag">
+          <i class="fas fa-star"></i>
+          <span>What We Offer</span>
+        </div>
+        <h2 class="section-title">
+          Powerful Features for
+          <br>
+          <span class="gradient-text">Comprehensive Protection</span>
+        </h2>
+        <p class="section-description">
+          Cutting-edge AI technology designed to analyze multiple content types with precision and speed.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="glass-card feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <h3>Text Analysis</h3>
+          <p>Advanced NLP models using Toxic BERT and LLM reasoning with Groq API integration for comprehensive text toxicity detection.</p>
+          <ul class="feature-list">
+            <li>Real-time scoring</li>
+            <li>Contextual understanding</li>
+            <li>Comprehensive reasoning</li>
+          </ul>
+        </div>
+        <div class="glass-card feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-image"></i>
+          </div>
+          <h3>Image Detection</h3>
+          <p>Dual-branch pipeline combining EasyOCR text extraction and OpenAI CLIP vision analysis with Gemini API fallback.</p>
+          <ul class="feature-list">
+            <li>OCR extraction</li>
+            <li>Vision classification</li>
+            <li>API fallback</li>
+          </ul>
+        </div>
+        <div class="glass-card feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-video"></i>
+          </div>
+          <h3>Video Processing</h3>
+          <p>Smart frame sampling (20%, 40%, 60%, 80% marks) with early exit logic for efficient content review.</p>
+          <ul class="feature-list">
+            <li>Strategic sampling</li>
+            <li>Early termination</li>
+            <li>Resource optimization</li>
+          </ul>
+        </div>
+      </div>
+      <div class="center-button" style="margin-top: 4rem;">
+        <button class="btn-outline">
+          View All Features
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.5), transparent);" id="impact">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-tag">
+          <i class="fas fa-chart-line"></i>
+          <span>Our Impact</span>
+        </div>
+        <h2 class="section-title">
+          Making the Internet
+          <br>
+          <span class="gradient-text">Safer Every Day</span>
+        </h2>
+        <p class="section-description">
+          Real-time detection that protects users from harmful content across multiple platforms.
+        </p>
+      </div>
+      <div class="impact-stats">
+        <div class="glass-card impact-stat">
+          <i class="fas fa-search"></i>
+          <div class="impact-number gradient-text">1M+</div>
+          <div class="impact-label">Contents Analyzed</div>
+        </div>
+        <div class="glass-card impact-stat">
+          <i class="fas fa-bullseye"></i>
+          <div class="impact-number gradient-text">95%</div>
+          <div class="impact-label">Accuracy Rate</div>
+        </div>
+        <div class="glass-card impact-stat">
+          <i class="fas fa-ban"></i>
+          <div class="impact-number gradient-text">50K+</div>
+          <div class="impact-label">Threats Blocked</div>
+        </div>
+        <div class="glass-card impact-stat">
+          <i class="fas fa-users"></i>
+          <div class="impact-number gradient-text">1K+</div>
+          <div class="impact-label">Active Users</div>
+        </div>
+      </div>
+      <div class="center-button">
+        <button class="btn-outline">
+          See Our Impact
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="mission">
+    <div class="section-content">
+      <div class="mission-grid">
+        <div class="mission-content">
+          <div class="section-tag">
+            <i class="fas fa-heart"></i>
+            <span>Our Mission</span>
+          </div>
+          <h2>
+            Creating a
+            <br>
+            <span class="gradient-text">Kind Digital World</span>
+          </h2>
+          <p>
+            We believe everyone deserves a safe and respectful online experience. Omni Guard AI is our commitment to using cutting-edge artificial intelligence to detect and prevent cyberbullying, harassment, and harmful content across the internet.
+          </p>
+          <div class="mission-points">
+            <div class="mission-point">
+              <i class="fas fa-check-circle"></i>
+              <span>Protect vulnerable users from online harm</span>
+            </div>
+            <div class="mission-point">
+              <i class="fas fa-check-circle"></i>
+              <span>Promote positive digital communication</span>
+            </div>
+            <div class="mission-point">
+              <i class="fas fa-check-circle"></i>
+              <span>Empower communities with AI tools</span>
+            </div>
+          </div>
+        </div>
+        <div class="mission-visual">
+          <i class="fas fa-heart"></i>
+          <h3>Together We Can</h3>
+          <p>Make the internet a safer place for everyone</p>
+        </div>
+      </div>
+      <div class="center-button" style="margin-top: 4rem;">
+        <button class="btn-outline">
+          Learn Our Mission
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.5), transparent);" id="news">
+    <div class="section-content">
+      <div class="section-header">
+        <div class="section-tag">
+          <i class="fas fa-newspaper"></i>
+          <span>Latest News</span>
+        </div>
+        <h2 class="section-title">
+          Stay Updated with
+          <br>
+          <span class="gradient-text">Cyber Safety News</span>
+        </h2>
+        <p class="section-description">
+          Latest news and insights about online safety and cyberbullying prevention.
+        </p>
+      </div>
+      <div class="news-grid">
+        <div class="glass-card news-card">
+          <div class="news-image-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=250&fit=crop" 
+              alt="AI Tool Helps Schools" 
+              class="news-image"
+            >
+            <span class="news-category">Education</span>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">
+              <i class="fas fa-clock"></i>
+              May 24, 2026
+            </div>
+            <h3>AI Tool Helps Schools Combat Cyberbullying</h3>
+          </div>
+        </div>
+        <div class="glass-card news-card">
+          <div class="news-image-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=250&fit=crop" 
+              alt="New Technology Detects" 
+              class="news-image"
+            >
+            <span class="news-category">Technology</span>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">
+              <i class="fas fa-clock"></i>
+              May 22, 2026
+            </div>
+            <h3>New Technology Detects Harmful Content Instantly</h3>
+          </div>
+        </div>
+        <div class="glass-card news-card">
+          <div class="news-image-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=250&fit=crop" 
+              alt="Omni Guard AI Launches" 
+              class="news-image"
+            >
+            <span class="news-category">Product</span>
+          </div>
+          <div class="news-content">
+            <div class="news-meta">
+              <i class="fas fa-clock"></i>
+              May 20, 2026
+            </div>
+            <h3>Omni Guard AI Launches Enhanced Features</h3>
+          </div>
+        </div>
+      </div>
+      <div class="center-button">
+        <button class="btn-outline">
+          View All News
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <span>Omni <span class="gradient-text">Guard AI</span></span>
+        </div>
+        <p>Advanced AI-powered cyberbullying detection for a safer digital world. Protecting users from harmful content across text, images, and videos.</p>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fab fa-linkedin"></i></a>
+          <a href="#"><i class="fab fa-discord"></i></a>
+        </div>
+      </div>
+      <div class="footer-column">
+        <h4>Product</h4>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">API Docs</a></li>
+          <li><a href="#">Changelog</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Company</h4>
+        <ul class="footer-links">
+          <li><a href="#mission">About Us</a></li>
+          <li><a href="#impact">Impact</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h4>Legal</h4>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="stylish-line" style="margin: 0 auto 2rem;"></div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Omni Guard AI. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const themeToggle = document.getElementById('themeToggle');
+    let isDarkMode = true;
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    themeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      document.body.classList.toggle('light-mode');
+      themeToggle.innerHTML = isDarkMode 
+        ? '<i class="fas fa-sun"></i>'
+        : '<i class="fas fa-moon"></i>';
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
