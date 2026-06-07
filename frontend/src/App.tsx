@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -43,7 +43,7 @@ interface UserData {
   }>;
 }
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
 function AppContent() {
   const [isDark, setIsDark] = useState(true);
@@ -82,8 +82,8 @@ function AppContent() {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('Sending login to:', `${API_BASE}/api/v1/auth/login`);
-      const response = await fetch(`${API_BASE}/api/v1/auth/login`, {
+      console.log('Sending login to:', `${API_BASE}auth/login`);
+      const response = await fetch(`${API_BASE}auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,9 +136,9 @@ function AppContent() {
 
   const signup = async (name: string, email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      console.log('Sending signup to:', `${API_BASE}/api/v1/auth/signup`);
+      console.log('Sending signup to:', `${API_BASE}auth/signup`);
       console.log('Body:', { name, email, password });
-      const response = await fetch(`${API_BASE}/api/v1/auth/signup`, {
+      const response = await fetch(`${API_BASE}auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -195,25 +195,6 @@ function AppContent() {
     localStorage.removeItem('omniguard_user');
     navigate('/login');
   };
-
-  const addToHistory = useCallback((item: UserData['history'][0]) => {
-    setCurrentUser(prevUser => {
-      if (prevUser) {
-        const updatedUser = {
-          ...prevUser,
-          stats: {
-            ...prevUser.stats,
-            totalScans: prevUser.stats.totalScans + 1,
-            threatsBlocked: item.result === 'toxic' ? prevUser.stats.threatsBlocked + 1 : prevUser.stats.threatsBlocked,
-          },
-          history: [item, ...prevUser.history],
-        };
-        localStorage.setItem('omniguard_user', JSON.stringify(updatedUser));
-        return updatedUser;
-      }
-      return prevUser;
-    });
-  }, []);
 
   const location = useLocation();
   const isPrivatePage = ['/dashboard', '/text-analysis', '/image-detection', '/video-processing', '/chatbot', '/reports', '/account', '/login', '/signup'].includes(location.pathname);

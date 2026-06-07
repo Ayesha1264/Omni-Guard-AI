@@ -6,12 +6,10 @@ import {
   Image as ImageIcon, 
   Video, 
   ChevronLeft,
-  AlertTriangle,
-  CheckCircle2,
   X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import SideMenu from '../components/SideMenu';
+import ProtectedLayout from '../components/ProtectedLayout';
 import { FadeIn } from '../components/SectionWrapper';
 import { cn } from '../lib/utils';
 
@@ -52,10 +50,7 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
   const videoReports = history.filter(h => h.type === 'video').length;
 
   return (
-    <div className="min-h-screen">
-      <SideMenu isDark={isDark} onLogout={onLogout} userName="User" />
-      
-      <div className="ml-64 p-8">
+    <ProtectedLayout isDark={isDark} onLogout={onLogout}>
         <FadeIn>
           <div className="mb-10">
             <div className="flex items-center gap-4 mb-4">
@@ -67,13 +62,13 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
               </Link>
               <div>
                 <h1 className={cn(
-                  'text-4xl font-black mb-2',
+                  'text-3xl md:text-4xl font-black mb-2',
                   isDark ? 'text-white' : 'text-slate-900'
                 )}>
                   Reports
                 </h1>
                 <p className={cn(
-                  'text-lg',
+                  'text-base md:text-lg',
                   isDark ? 'text-slate-400' : 'text-slate-600'
                 )}>
                   View your scan history
@@ -186,7 +181,7 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.05 }}
                     className={cn(
-                      'flex items-center justify-between p-4 rounded-2xl',
+                      'flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-4 rounded-2xl',
                       isDark ? 'bg-slate-800/30' : 'bg-slate-50'
                     )}
                   >
@@ -215,7 +210,7 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
                       <div className={cn(
                         'px-4 py-2 rounded-xl font-bold text-sm',
                         item.result === 'toxic' 
@@ -237,13 +232,13 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
             ) : (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className={cn(
-                  'w-24 h-24 rounded-3xl mb-6 flex items-center justify-center',
+                  'w-20 h-20 md:w-24 md:h-24 rounded-3xl mb-6 flex items-center justify-center',
                   isDark ? 'bg-slate-800' : 'bg-slate-100'
                 )}>
-                  <FileText className="w-12 h-12 text-primary/50" />
+                  <FileText className="w-10 h-10 md:w-12 md:h-12 text-primary/50" />
                 </div>
                 <p className={cn(
-                  'text-xl font-bold mb-2',
+                  'text-lg md:text-xl font-bold mb-2',
                   isDark ? 'text-slate-400' : 'text-slate-600'
                 )}>
                   No reports yet
@@ -258,8 +253,7 @@ const Reports: React.FC<ReportsProps> = ({ isDark, onLogout }) => {
             )}
           </motion.div>
         </FadeIn>
-      </div>
-    </div>
+    </ProtectedLayout>
   );
 };
 

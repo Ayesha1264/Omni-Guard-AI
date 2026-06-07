@@ -22,8 +22,6 @@ def get_toxic_classifier():
 
 
 async def analyze_text_pipeline(text: str) -> dict:
-    # PIPELINE STEP 1: Local Model Validation
-    # Model: unitary/toxic-bert ( `https://huggingface.co/unitary/toxic-bert` )
     classifier = get_toxic_classifier()
     results = classifier(text)[0]
 
@@ -33,12 +31,6 @@ async def analyze_text_pipeline(text: str) -> dict:
             toxicity_score = result["score"]
             break
 
-    # PIPELINE STEP 2: Cloud API Validation (If needed)
-    # API: Perspective API ( `https://perspectiveapi.com/` )
-    # Dropped - relying exclusively on Groq for reasoning
-
-    # PIPELINE STEP 3: Reasoning & Report Generation (LLM-as-a-Judge)
-    # API: Groq LLaMA/Mixtral ( `https://console.groq.com/` )
     if toxicity_score > 0.5:
         result_label = "toxic"
         fallback_reasoning = "Flagged by local Toxic-BERT model."

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
+import {
   Newspaper,
   Clock,
   ArrowRight,
@@ -9,7 +9,8 @@ import {
 import { SectionWrapper, FadeIn } from '../components/SectionWrapper';
 import { cn } from '../lib/utils';
 
-const API_BASE = 'http://127.0.0.1:8000';
+// const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api/v1/';
 
 interface Article {
   title: string;
@@ -31,9 +32,9 @@ const News: React.FC<NewsProps> = ({ isDark }) => {
   const fetchNews = async (forceRefresh = false) => {
     setIsLoading(true);
     try {
-      const url = forceRefresh 
-        ? `${API_BASE}/api/v1/news?force_refresh=true` 
-        : `${API_BASE}/api/v1/news`;
+      const url = forceRefresh
+        ? `${API_BASE}news?force_refresh=true`
+        : `${API_BASE}news`;
       const response = await fetch(url);
       const data = await response.json();
       setNews(data.slice(0, 6));
@@ -134,9 +135,9 @@ const News: React.FC<NewsProps> = ({ isDark }) => {
                     )}
                   >
                     <div className="relative">
-                      <img 
-                        src={article.urlToImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop'} 
-                        alt={article.title} 
+                      <img
+                        src={article.urlToImage || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop'}
+                        alt={article.title}
                         className="w-full h-48 object-cover"
                       />
                       <div className="absolute top-4 left-4">

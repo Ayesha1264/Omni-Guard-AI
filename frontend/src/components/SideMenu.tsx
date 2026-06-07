@@ -8,7 +8,8 @@ import {
   User, 
   Shield, 
   LogOut,
-  MessageSquare
+  MessageSquare,
+  X
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
@@ -17,9 +18,10 @@ interface SideMenuProps {
   isDark: boolean;
   onLogout: () => void;
   userName?: string;
+  onClose?: () => void;
 }
 
-const SideMenu: React.FC<SideMenuProps> = ({ isDark, onLogout, userName }) => {
+const SideMenu: React.FC<SideMenuProps> = ({ isDark, onLogout, userName, onClose }) => {
   const location = useLocation();
 
   const menuItems = [
@@ -36,24 +38,37 @@ const SideMenu: React.FC<SideMenuProps> = ({ isDark, onLogout, userName }) => {
     <motion.div
       initial={{ x: -300 }}
       animate={{ x: 0 }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       className={cn(
-        'w-64 h-screen fixed left-0 top-0 z-40 flex flex-col py-8 px-4',
+        'w-64 h-screen flex flex-col py-6 px-4',
         isDark 
           ? 'bg-gradient-to-b from-dark to-darker border-r border-slate-700/50' 
           : 'bg-gradient-to-b from-slate-50 to-white border-r border-slate-200'
       )}
     >
-      <div className="flex items-center gap-3 mb-8 px-2">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-lg shadow-primary/30">
-          <Shield className="w-6 h-6 text-white" />
+      <div className="flex items-center justify-between mb-8 px-2">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-secondary to-accent flex items-center justify-center shadow-lg shadow-primary/30">
+            <Shield className="w-6 h-6 text-white" />
+          </div>
+          <span className={cn(
+            'text-xl font-black',
+            isDark ? 'text-white' : 'text-slate-900'
+          )}>
+            Omni<span className="gradient-text">Guard</span>
+          </span>
         </div>
-        <span className={cn(
-          'text-xl font-black',
-          isDark ? 'text-white' : 'text-slate-900'
-        )}>
-          Omni<span className="gradient-text">Guard</span>
-        </span>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl hover:bg-opacity-10 transition-colors md:hidden"
+            style={{
+              backgroundColor: isDark ? 'rgba(51, 65, 85, 0.3)' : 'rgba(226, 232, 240, 0.5)'
+            }}
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {userName && (
@@ -80,7 +95,11 @@ const SideMenu: React.FC<SideMenuProps> = ({ isDark, onLogout, userName }) => {
         {menuItems.map((item, idx) => {
           const isActive = location.pathname === item.path;
           return (
-            <Link key={idx} to={item.path}>
+            <Link 
+              key={idx} 
+              to={item.path}
+              onClick={() => onClose && onClose()}
+            >
               <motion.div
                 whileHover={{ x: 4, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

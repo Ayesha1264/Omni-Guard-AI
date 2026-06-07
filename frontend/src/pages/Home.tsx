@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { SectionWrapper, FadeIn } from '../components/SectionWrapper';
 import FeatureCard from '../components/FeatureCard';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 
 interface HomeProps {
@@ -40,10 +40,9 @@ interface Article {
   source: { name: string };
 }
 
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 
 const Home: React.FC<HomeProps> = ({ isDark }) => {
-  const navigate = useNavigate();
   const [news, setNews] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -55,21 +54,13 @@ const Home: React.FC<HomeProps> = ({ isDark }) => {
       return false;
     }
   };
-  
-  const handleGetStarted = () => {
-    if (isAuthenticated()) {
-      navigate('/dashboard');
-    } else {
-      navigate('/login');
-    }
-  };
 
   const fetchNews = async (forceRefresh = false) => {
     setIsLoading(true);
     try {
       const url = forceRefresh 
-        ? `${API_BASE}/api/v1/news?force_refresh=true` 
-        : `${API_BASE}/api/v1/news`;
+        ? `${API_BASE}news?force_refresh=true` 
+        : `${API_BASE}news`;
       const response = await fetch(url);
       const data = await response.json();
       setNews(data);
@@ -168,19 +159,21 @@ const Home: React.FC<HomeProps> = ({ isDark }) => {
                       <ArrowRight className="w-5 h-5" />
                     </motion.button>
                   </Link>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={cn(
-                      'px-8 py-3.5 rounded-full border-2 font-bold text-lg transition-all duration-300 flex items-center gap-3',
-                      isDark
-                        ? 'border-slate-700 text-white hover:border-primary/50 hover:bg-primary/5'
-                        : 'border-slate-300 text-slate-800 hover:border-primary/50 hover:bg-primary/5'
-                    )}
-                  >
-                    <Shield className="w-5 h-5" />
-                    Get Started
-                  </motion.button>
+                  <Link to={isAuthenticated() ? "/dashboard" : "/login"}>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={cn(
+                        'px-8 py-3.5 rounded-full border-2 font-bold text-lg transition-all duration-300 flex items-center gap-3',
+                        isDark
+                          ? 'border-slate-700 text-white hover:border-primary/50 hover:bg-primary/5'
+                          : 'border-slate-300 text-slate-800 hover:border-primary/50 hover:bg-primary/5'
+                      )}
+                    >
+                      <Shield className="w-5 h-5" />
+                      Get Started
+                    </motion.button>
+                  </Link>
                 </div>
               </FadeIn>
             </div>

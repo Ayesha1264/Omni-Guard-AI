@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  MessageSquare, 
   Send, 
   Bot, 
   User, 
-  ChevronLeft,
-  Loader2
+  ChevronLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import SideMenu from '../components/SideMenu';
+import ProtectedLayout from '../components/ProtectedLayout';
 import { FadeIn } from '../components/SectionWrapper';
 import { cn } from '../lib/utils';
 
@@ -124,10 +122,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isDark, onLogout, user }) => {
   };
 
   return (
-    <div className="min-h-screen">
-      <SideMenu isDark={isDark} onLogout={onLogout} userName={user?.name} />
-      
-      <div className="ml-64 p-8">
+    <ProtectedLayout isDark={isDark} onLogout={onLogout} userName={user?.name}>
         <FadeIn>
           <div className="mb-10">
             <div className="flex items-center gap-4 mb-4">
@@ -139,13 +134,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ isDark, onLogout, user }) => {
               </Link>
               <div>
                 <h1 className={cn(
-                  'text-4xl font-black mb-2',
+                  'text-3xl md:text-4xl font-black mb-2',
                   isDark ? 'text-white' : 'text-slate-900'
                 )}>
                   AI Chatbot
                 </h1>
                 <p className={cn(
-                  'text-lg',
+                  'text-base md:text-lg',
                   isDark ? 'text-slate-400' : 'text-slate-600'
                 )}>
                   Ask questions about Omni Guard AI and cyber safety
@@ -159,7 +154,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isDark, onLogout, user }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className={cn(
-            'rounded-3xl border overflow-hidden flex flex-col h-[calc(100vh-200px)]',
+            'rounded-3xl border overflow-hidden flex flex-col h-[calc(100vh-250px)]',
             isDark 
               ? 'bg-card border-slate-700/50' 
               : 'bg-white border-slate-200'
@@ -288,8 +283,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ isDark, onLogout, user }) => {
             </form>
           </div>
         </motion.div>
-      </div>
-    </div>
+    </ProtectedLayout>
   );
 };
 

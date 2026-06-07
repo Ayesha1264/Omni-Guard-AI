@@ -8,7 +8,13 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Cyberbullying Detection API", version="1.0.0")
 
-origins = ["*"]
+origins = [
+    "*",
+    "http://localhost",
+    "https://localhost",
+    "capacitor://localhost",
+]
+
 
 app.add_middleware(
     CORSMiddleware,
